@@ -1,0 +1,23 @@
+precision highp float;
+
+varying vec3 vTextureCoord;
+
+uniform mat4 uViewMatrix;
+varying mat3 vTanSpaceMatrix;
+uniform sampler2D uTextureDiffuse;
+uniform sampler2D uTextureNormal;
+
+void main()
+{
+	vec3 color = vec3(1.);
+	
+	vec4 texture = texture2D(uTextureDiffuse, vTextureCoord.xy);
+	
+	vec3 normal = texture2D(uTextureNormal, vTextureCoord.xy).xyz * 2. - 1.;
+	normal = normalize(vTanSpaceMatrix * normal);
+	float diffuseTerm = dot(normal, vec3(0., 0., 1.));
+	
+	color = texture.xyz * diffuseTerm;
+	
+	gl_FragColor = vec4(color, 1.);
+}

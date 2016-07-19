@@ -1,0 +1,30 @@
+attribute vec4 se_Position;
+attribute vec3 se_TextureCoord;
+attribute vec4 se_Color;
+attribute vec3 se_Normal;
+attribute vec3 se_Tangent;
+attribute vec3 se_Bitangent;
+attribute vec4 se_BoneId;
+attribute vec4 se_BoneWeight;
+
+uniform mat4 se_ModelMatrix;
+uniform mat4 se_BoneMatrix[10];
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
+
+varying vec3 vTextureCoord;
+varying mat3 vTanSpaceMatrix;
+
+void main()
+{
+	gl_PointSize = 4.;
+	vTextureCoord = se_TextureCoord;
+	vTextureCoord.y = 1. - se_TextureCoord.y;
+	vTanSpaceMatrix = mat3(se_ModelMatrix) * mat3(se_Tangent, se_Bitangent, se_Normal);
+	
+	mat4 bonesTransform =
+		se_BoneMatrix[int(se_BoneId[0])] * se_BoneWeight[0];
+	
+	gl_Position = uProjectionMatrix * uViewMatrix * se_ModelMatrix * bonesTransform * se_Position;
+}

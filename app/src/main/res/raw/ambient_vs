@@ -1,0 +1,17 @@
+attribute vec4 se_Position;
+attribute vec3 se_Color;
+
+uniform mat4 uProjectionMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 se_ModelMatrix;
+uniform mat4 uVPMatrix;
+
+uniform float uFps;
+
+varying vec3 vColor;
+
+void main()
+{
+	vColor = se_Color;
+	gl_Position = uVPMatrix * se_ModelMatrix * se_Position;
+}
